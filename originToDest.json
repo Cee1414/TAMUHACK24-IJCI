@@ -1,0 +1,32 @@
+{
+   "destination_addresses" : 
+   [
+      "8500 Peña Blvd, Denver, CO 80249, USA"
+   ],
+   "origin_addresses" : 
+   [
+      "2375 International Pkwy, Dallas, TX 75261, USA"
+   ],
+   "rows" : 
+   [
+      {
+         "elements" : 
+         [
+            {
+               "distance" : 
+               {
+                  "text" : "1,235 km",
+                  "value" : 1235190
+               },
+               "duration" : 
+               {
+                  "text" : "11 hours 50 mins",
+                  "value" : 42614
+               },
+               "status" : "OK"
+            }
+         ]
+      }
+   ],
+   "status" : "OK"
+}

@@ -26,15 +26,36 @@ for airport in airports:
 
 print("All Coordinates:", originsWithCoordinates)
 
+f = open("/mnt/c/Users/camso/CSCE221/googleAPIkey.txt", "r")
+key = f.read().strip()
+
 slice1 = "https://maps.googleapis.com/maps/api/distancematrix/json?destinations="
 slice2 = "&origins="
-slice3 = "&key=/mnt/c/Users/camso/CSCE221/googleAPIkey.txt"
+slice3 = f'&key={key}'
 
 for originKey in originsWithCoordinates:
-    originCoords = f'{originsWithCoordinates[originKey][0]} {originsWithCoordinates[originKey][1]}'
-    
+    originCoords = f'{originsWithCoordinates[originKey][0]}%2C{originsWithCoordinates[originKey][1]}'
+    # originCoords = urllib.parse.quote_plus(originCoords)
     for destinationKey in originsWithCoordinates:
-        destinationCoords = f'{originsWithCoordinates[destinationKey][0]} {originsWithCoordinates[destinationKey][1]}'
+    # for i in range(1):
+        destinationCoords = f'{originsWithCoordinates[destinationKey][0]}%2C{originsWithCoordinates[destinationKey][1]}'
+        # destinationCoords = urllib.parse.quote_plus(destinationCoords)
+        response = requests.get(slice1+destinationCoords+slice2+originCoords+slice3)
+        print(slice1+destinationCoords+slice2+originCoords+slice3)
+        f = open("originToDest.json", "w")
+        if response.status_code == 200:
+            f.write(response.text)
+        else:
+            print(response.status_code)
+        f.close()
+
+        f = open("originToDest.json", "r")
+        drivedata = json.load(f)
+        
+        f.close()
+
+
+
 
 
 
