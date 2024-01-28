@@ -107,7 +107,7 @@ def getOriginDictionary(originKey):
         drivedata = json.load(f)
         f.close()
         # for data in drivedata:
-        time = drivedata['rows'][0]['elements'][0]['duration']['value']/3600
+        time = round(drivedata['rows'][0]['elements'][0]['duration']['value']/60)
         distanceForOrigin[destinationKey] = time
     keys = list(distanceForOrigin.keys())
     values = list(distanceForOrigin.values())
@@ -115,23 +115,58 @@ def getOriginDictionary(originKey):
     sorted_dict = {keys[i]: values[i] for i in sorted_value_index}
     return sorted_dict
 
-def possibleConnection(origin, dest, date):
-    response = requests.get(f"https://americanairlines-e02d72e53739.herokuapp.com/flights?date={date}&origin={origin}&destination={dest}")
+def convertStringToFloat(timeString):
+    hours, minutes = map(int, timeString.split(':'))
+    total_minutes = hours * 60 + minutes
+    time_float = float(total_minutes)
+    return time_float
 
+def possibleConnection(origin, dest, date, time):
+    response = requests.get(f"https://americanairlines-e02d72e53739.herokuapp.com/flights?date={date}&origin={origin}&destination={dest}")
+    f = open("flightData.json", "w")
+    if response.status_code == 200: 
+        f.write(response.text)
+    f.close()
+    
+    f = open("flightData.json", "r")
+    flightData = json.load(f)
+    f.close()
+
+    for flight in flightData:
+        if convertStringToFloat((flight['departureTime'])[-4:])>time:
+            return flight
+        
+    return False
+        
 
 def main():
     #known variables
+    flightnumber = "9722"
     date = "2020-01-01"
     origin = "DFW"
-    finalDest = "LGA"
-    originalDeparture = "03:45"
-    
+    finalDest = "GSO"
+    originalDeparture = "00:00"
+    flight = "NA"
     destDict = getOriginDictionary(origin)
+    driveTime = 0
+    driveDest = "Null"
     for dest in destDict:
         if dest == origin:
             continue
-        if possibleConnection(dest, finalDest, date, ):
-           break
+        time = convertStringToFloat(originalDeparture) + destDict[dest]
+        if possibleConnection(dest, finalDest, date, time) == False:
+           continue
+        else:
+            flight = possibleConnection(dest, finalDest, date, time)
+            driveTime = time
+            driveDest = dest
+            break
+    # print(flight)
+    print(f"Flight {flightnumber} from {origin} to {finalDest} was cancelled. No other flight at DFW is available for the remainder of the day.")
+    print(f"We have created a travel plan for you to make it to you destination by the end of the day and is as follows.")
+    print(f"Complementary rental car from {origin} to {driveDest} taking {driveTime} minutes.")
+    print(f"You are rescheduled to flight {flight['flightNumber']} from {driveDest} to {finalDest} departing at {(flight['departureTime'])[-4:]} and arriving at {(flight['arrivalTime'])[-4:]}.")
+
 
 
 if __name__ == "__main__":
