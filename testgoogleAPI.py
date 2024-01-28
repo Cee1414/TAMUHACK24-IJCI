@@ -1,7 +1,6 @@
 import requests
 import json
-import urllib.parse
-
+import numpy as np
 
 f = open("airports.json", "w")
 response = requests.get("https://americanairlines-e02d72e53739.herokuapp.com/airports/all")
@@ -35,14 +34,14 @@ slice3 = f'&key={key}'
 
 for originKey in originsWithCoordinates:
     originCoords = f'{originsWithCoordinates[originKey][0]}%2C{originsWithCoordinates[originKey][1]}'
-    allDistances = {}
+    distanceForOrigin = {}
     # originCoords = urllib.parse.quote_plus(originCoords)
     for destinationKey in originsWithCoordinates:
     # for i in range(1):
         destinationCoords = f'{originsWithCoordinates[destinationKey][0]}%2C{originsWithCoordinates[destinationKey][1]}'
         # destinationCoords = urllib.parse.quote_plus(destinationCoords)
         response = requests.get(slice1+destinationCoords+slice2+originCoords+slice3)
-        print(slice1+destinationCoords+slice2+originCoords+slice3)
+        # print(slice1+destinationCoords+slice2+originCoords+slice3)
         f = open("originToDest.json", "w")
         if response.status_code == 200:
             f.write(response.text)
@@ -53,8 +52,17 @@ for originKey in originsWithCoordinates:
         f = open("originToDest.json", "r")
         drivedata = json.load(f)
         f.close()
+        # for data in drivedata:
+        time = drivedata['rows'][0]['elements'][0]['duration']['value']
+        distanceForOrigin[destinationKey] = time
+    keys = list(distanceForOrigin.keys())
+    values = list(distanceForOrigin.values())
+    sorted_value_index = np.argsort(values)
+    sorted_dict = {keys[i]: values[i] for i in sorted_value_index}
+ 
+    print(sorted_dict)
 
-        
+
 
         
 
