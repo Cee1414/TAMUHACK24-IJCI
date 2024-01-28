@@ -35,6 +35,7 @@ slice3 = f'&key={key}'
 
 for originKey in originsWithCoordinates:
     originCoords = f'{originsWithCoordinates[originKey][0]}%2C{originsWithCoordinates[originKey][1]}'
+    allDistances = {}
     # originCoords = urllib.parse.quote_plus(originCoords)
     for destinationKey in originsWithCoordinates:
     # for i in range(1):
@@ -51,8 +52,10 @@ for originKey in originsWithCoordinates:
 
         f = open("originToDest.json", "r")
         drivedata = json.load(f)
-        
         f.close()
+
+        
+
 
 
 
