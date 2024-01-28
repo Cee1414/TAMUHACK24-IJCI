@@ -107,7 +107,7 @@ def getOriginDictionary(originKey):
         drivedata = json.load(f)
         f.close()
         # for data in drivedata:
-        time = drivedata['rows'][0]['elements'][0]['duration']['value']
+        time = drivedata['rows'][0]['elements'][0]['duration']['value']/3600
         distanceForOrigin[destinationKey] = time
     keys = list(distanceForOrigin.keys())
     values = list(distanceForOrigin.values())
@@ -115,10 +115,23 @@ def getOriginDictionary(originKey):
     sorted_dict = {keys[i]: values[i] for i in sorted_value_index}
     return sorted_dict
 
+def possibleConnection(origin, dest, date):
+    response = requests.get(f"https://americanairlines-e02d72e53739.herokuapp.com/flights?date={date}&origin={origin}&destination={dest}")
 
 
 def main():
-    print(getOriginDictionary("DFW"))
+    #known variables
+    date = "2020-01-01"
+    origin = "DFW"
+    finalDest = "LGA"
+    originalDeparture = "03:45"
+    
+    destDict = getOriginDictionary(origin)
+    for dest in destDict:
+        if dest == origin:
+            continue
+        if possibleConnection(dest, finalDest, date, ):
+           break
 
 
 if __name__ == "__main__":
