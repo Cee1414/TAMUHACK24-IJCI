@@ -5,7 +5,7 @@
    ],
    "origin_addresses" : 
    [
-      "PHL Airport, 8000 Essington Ave, Philadelphia, PA 19153, USA"
+      "2375 International Pkwy, Dallas, TX 75261, USA"
    ],
    "rows" : 
    [
@@ -15,13 +15,13 @@
             {
                "distance" : 
                {
-                  "text" : "1 m",
-                  "value" : 0
+                  "text" : "2,376 km",
+                  "value" : 2376269
                },
                "duration" : 
                {
-                  "text" : "1 min",
-                  "value" : 0
+                  "text" : "21 hours 44 mins",
+                  "value" : 78249
                },
                "status" : "OK"
             }
